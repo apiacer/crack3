@@ -1,0 +1,2 @@
+clang crack.c fileutil.c md5.c -l crypto
+./a.out example0.txt enable1.txt
