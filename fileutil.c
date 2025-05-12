@@ -53,18 +53,17 @@ char (*loadFile2D(char *filename, int *size))[COLS]
 	}
 	
 	// initialize stuff
-	int capacity = 10;
+	int capacity = 20;
 	*size = 0;
 	
 	// Allocate memory for an 2D array, using COLS as the width.
 	char (*arr)[COLS] = malloc(capacity * sizeof(char[COLS]));
 	
 	// Read the file line by line into a buffer.
-	char * buffer = malloc(sizeof(char[COLS]));
+	char * buffer = malloc(1000);
 	
 	while(fgets(buffer, COLS, in) != NULL)
 	{
-		printf("index: %d size: %d |\t\t%s", *size, capacity, buffer);
     	//   Trim newline.
 		char *newline = strchr(buffer, '\n');
 		if(newline) *newline = '\0';
@@ -72,20 +71,20 @@ char (*loadFile2D(char *filename, int *size))[COLS]
 		//   Expand array if necessary (realloc).
 		if(*size >= capacity)
 		{
-			printf("Yes\n");
 			capacity *= 1.5;
 			arr = realloc(arr, capacity * sizeof(char[COLS]));
 		}
-		printf("index: %d size: %d |\t\t%s\n", *size, capacity, buffer);
-		//   Copy each line from the buffer into the array (use strcpy).
-		strcpy(*(arr + ((*size) * sizeof(char[COLS]))), buffer);
 		
+		//   Copy each line from the buffer into the array (use strcpy).
+		strcpy(arr[*size], buffer);
+
 		// Loop stuff
 		*size += 1;
 	}
 
     // Close the file.
 	fclose(in);
+	free(buffer);
 	
 	// The size should be the number of entries in the array.
 	
@@ -106,7 +105,7 @@ char * substringSearch2D(char *target, char (*lines)[COLS], int size)
 	int index = 0;
     do
 	{
-		if(strcmp(target, *(lines + (index * COLS))) == 0) return *(lines + (index * COLS));
+		if(strcmp(target, lines[index]) == 0) return lines[index];
 		index++;
 	}
 	while(index < size);
